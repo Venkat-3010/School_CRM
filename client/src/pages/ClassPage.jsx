@@ -8,8 +8,8 @@ import {
   updateClassById,
 } from "../api/classApi";
 import DataTable from "../components/DataTable";
-import Pagination from "../components/pagination";
 import Form from "../components/Form";
+import Pagination from "../components/Pagination";
 
 const ClassPage = () => {
   const [classes, setClasses] = useState([]);

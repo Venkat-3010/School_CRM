@@ -8,7 +8,7 @@ import {
 } from "../api/teacherApi";
 import { getAllClasses } from "../api/classApi";
 import DataTable from "../components/DataTable";
-import Pagination from "../components/pagination";
+import Pagination from "../components/Pagination";
 import Form from "../components/Form";
 import { useNavigate } from "react-router-dom";
 
@@ -32,7 +32,7 @@ const TeacherPage = () => {
   const fetchTeachers = async (page, sort, order) => {
     try {
       const response = await getAllTeachers({ page, sort, order });
-      console.log(response.data);
+      // console.log(response.data);
       const flattenedTeachers = response.data.map((teacher) => ({
         ...teacher,
         className: teacher.assignedClass ? teacher.assignedClass.name : "N/A",

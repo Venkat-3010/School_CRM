@@ -8,7 +8,7 @@ import {
 } from "../api/studentApi";
 import { getAllClasses } from "../api/classApi";
 import Form from "../components/Form";
-import Pagination from "../components/pagination";
+import Pagination from "../components/Pagination";
 import DataTable from "../components/DataTable";
 import { useNavigate } from "react-router-dom";
 
