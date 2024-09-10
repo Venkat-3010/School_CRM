@@ -1,12 +1,13 @@
 const Class = require("../models/class");
+const Teacher = require("../models/teacher");
+const Student = require("../models/student");
 
 const createClass = async (req, res) => {
-  const { name, year, teacher, studentFees, studentLimit } = req.body;
+  const { name, year, studentFees, studentLimit } = req.body;
   try {
     const newClass = new Class({
       name,
       year,
-      teacher,
       studentFees,
       studentLimit,
     });
@@ -20,7 +21,7 @@ const createClass = async (req, res) => {
 const getClassById = async (req, res) => {
   const { id } = req.params;
   try {
-    const classData = await Class.findById(id).populate("teacher student");
+    const classData = await Class.findById(id).populate("teacher students");
     if (!classData) {
       return res.status(404).json({ message: "Class not found" });
     }
@@ -86,10 +87,63 @@ const getAllClasses = async (req, res) => {
   }
 };
 
+const getFinancialAnalytics = async (req, res) => {
+  const { view, month, year } = req.query;
+  try {
+    let teacherQuery = {};
+    let studentQuery = {};
+
+    if (view === "monthly") {
+      teacherQuery = {
+        createdAt: {
+          $gte: new Date(`${year}-${month}-01`),
+          $lt: new Date(`${year}-${month}-31`),
+        },
+      };
+      studentQuery = {
+        createdAt: {
+          $gte: new Date(`${year}-${month}-01`),
+          $lt: new Date(`${year}-${month}-31`),
+        },
+      };
+    } else if (view === "yearly") {
+      teacherQuery = {
+        createdAt: {
+          $gte: new Date(`${year}-01-01`),
+          $lt: new Date(`${year}-12-31`),
+        },
+      };
+      studentQuery = {
+        createdAt: {
+          $gte: new Date(`${year}-01-01`),
+          $lt: new Date(`${year}-12-31`),
+        },
+      };
+    }
+
+    const teachers = await Teacher.find(teacherQuery);
+    const totalExpenses = teachers.reduce(
+      (acc, teacher) => acc + teacher.salary,
+      0
+    );
+
+    const students = await Student.find(studentQuery);
+    const totalIncome = students.reduce(
+      (acc, student) => acc + student.feesPaid,
+      0
+    );
+
+    res.status(200).json({ expenses: totalExpenses, income: totalIncome });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   createClass,
   getClassById,
   updateClassById,
   deleteClassById,
   getAllClasses,
+  getFinancialAnalytics
 };

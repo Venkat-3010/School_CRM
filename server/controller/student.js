@@ -1,18 +1,26 @@
 const Student = require("../models/student");
+const Class = require("../models/class");
 
 const createStudent = async (req, res) => {
-  const { name, gender, dob, contactDetails, feesPaid, classId } = req.body;
+  console.log(req.body)
+  const { name, gender, dob, contactNumber, email, feesPaid, classId } = req.body;
   try {
     const newStudent = new Student({
       name,
       gender,
       dob,
-      contactDetails,
+      email,
+      contactNumber,
       feesPaid,
       classId,
     });
     await newStudent.save();
-    res.status(201).json(newStudent);
+
+    const updatedStudent = await Class.findByIdAndUpdate(classId, {
+      $push: { students: newStudent._id },
+    }, { new: true });
+
+    res.status(201).json(newStudent, updatedStudent);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -59,7 +67,8 @@ const deleteStudentById = async (req, res) => {
   }
 };
 
-const getStudentsInClass = async (req, res) => {
+const getAllStudentsInClass = async (req, res) => {
+  console.log(req.query)
   try {
     const {
       page = 1,
@@ -72,7 +81,7 @@ const getStudentsInClass = async (req, res) => {
     const students = await Student.find({
       name: { $regex: search, $options: "i" },
     })
-      .populate("class")
+      .populate("classId")
       .sort({ [sort]: order === "asc" ? 1 : -1 })
       .skip((page - 1) * limit)
       .limit(Number(limit));
@@ -80,6 +89,8 @@ const getStudentsInClass = async (req, res) => {
     const total = await Student.countDocuments({
       name: { $regex: search, $options: "i" },
     });
+
+    console.log(total);
 
     res.status(200).json({ data: students, total });
   } catch (error) {
@@ -92,5 +103,5 @@ module.exports = {
   getStudentById,
   updateStudentById,
   deleteStudentById,
-  getStudentsInClass,
+  getAllStudentsInClass,
 };
