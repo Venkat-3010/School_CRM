@@ -1,6 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
-const url = "http://localhost:7000/api/teachers";
+// const url = "http://localhost:7000/api/teachers";
+const url = "https://school-crm-eans.onrender.com/api/teachers";
 
 const createTeacher = async (values) => {
   try {
