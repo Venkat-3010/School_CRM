@@ -28,7 +28,7 @@ function App() {
         </div>
         <div className="w-full">
           <Routes>
-            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/" element={<DashboardPage />} />
             <Route path='/classes' element={<ClassPage />}/>
             <Route path='/classes/:id/analytics' element={<ClassAnalytics />}/>
             <Route path='/students' element={<StudentPage />}/>

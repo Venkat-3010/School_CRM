@@ -14,10 +14,10 @@ const Sidebar = () => {
       </li>
       <li
         className={`px-8 py-4 rounded-lg hover:shadow-lg hover:bg-blue-100 ${
-          location.pathname === "/dashboard" ? "bg-blue-100" : ""
+          location.pathname === "/" ? "bg-blue-100" : ""
         }`}
       >
-        <Link to="/dashboard"><RiDashboardFill className="inline-block"/> Dashboard</Link>
+        <Link to="/"><RiDashboardFill className="inline-block"/> Dashboard</Link>
       </li>
       <li
         className={`px-8 py-4 rounded-lg hover:shadow-lg hover:bg-blue-100 ${
